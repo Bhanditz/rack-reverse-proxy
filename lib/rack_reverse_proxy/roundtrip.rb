@@ -100,6 +100,11 @@ module RackReverseProxy
       target_request_headers["X-Forwarded-Port"] = source_request.port.to_s
     end
 
+    def set_custom_headers
+      return unless options[:custom_headers]
+      target_request_headers.merge!(options[:custom_headers])
+    end
+
     def initialize_http_header
       target_request.initialize_http_header(target_request_headers)
     end
@@ -185,6 +190,7 @@ module RackReverseProxy
       preserve_host
       preserve_encoding
       set_forwarded_headers
+      set_custom_headers
       initialize_http_header
       set_basic_auth
       setup_body
